@@ -42,21 +42,23 @@ This repository is setup as a monorepo, meaning that the frontend and backend pr
 
 ## API
 The API is built using RESTful API principles. This API allows for creation, reading, and updating reservations. The user can also create and read tables, and update the status of the table from occupied to free. There is currently not capability for the user to delete reservations or tables at this time.
-Endpoint Description
-•	GET /reservations returns all reservations
-•	POST /reservations creates and returns a new reservation
-•	GET /reservations?date='YYYY-MM-DD' returns reservations by date (sorted asc)
-•	GET /reservations?mobile_number=123 returns reservations by partial match of phone number
-•	GET /reservations/:reservationId returns reservation matching the reservationId
-•	PUT /reservations/:reservationId updates and returns the reservation matching the reservationId
-•	PUT /reservations/:reservationId/status updates only the status of a reservation
-•	GET /tables returns all Tables
-•	POST /tables creates and returns a new table
-•	PUT /tables:table_id/seat updates a table with a reservationId and changes status to "occupied"
-•	Delete /tables:table_id/seat updates a table by deleting reservationId and changes status to "free"
+
+###Endpoint Description
+- GET /reservations returns all reservations
+- POST /reservations creates and returns a new reservation
+- GET /reservations?date='YYYY-MM-DD' returns reservations by date (sorted asc)
+- GET /reservations?mobile_number=123 returns reservations by partial match of phone number
+- GET /reservations/:reservationId returns reservation matching the reservationId
+- PUT /reservations/:reservationId updates and returns the reservation matching the reservationId
+- PUT /reservations/:reservationId/status updates only the status of a reservation
+- GET /tables returns all Tables
+-	POST /tables creates and returns a new table
+-	PUT /tables:table_id/seat updates a table with a reservationId and changes status to "occupied"
+- Delete /tables:table_id/seat updates a table by deleting reservationId and changes status to "free"
 
 
 ## Features
+
 ### Dashboard
 Reservations and tables are managed through the dashboard screen. By default, the dashboard will list reservations for the current day (today). Using the ‘previous’ and ‘next’ buttons, the user can navigate through reservations by date.
 Tables and their availability are displayed below the current day’s reservations.
@@ -68,9 +70,9 @@ All of the form fields are required, and an error banner will appear if the user
 ### Edit a Reservation
 Users may edit an existing reservation by selecting the ‘Edit’ button on the reservation listing. All fields can be edited, but the same restrictions apply as when creating a reservation.
 
-
 ### Seat a Reservation
 Reservations can be seated at a table by selecting the ‘Seat’ button on a reservation display. Tables with capacities smaller than the reservation’s party size cannot be selected. Selecting ‘Seat’ and confirming set the reservation status to ‘seated’ and the table status to ‘occupied’.
+
 ### Search Reservations
 Users are able to search for existing reservations by the phone number associated with the reservation. This feature can be found by selecting the ‘Search’ button in the sidebar.
 
