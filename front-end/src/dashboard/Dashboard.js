@@ -3,8 +3,8 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import {previous, next, today} from "../utils/date-time"
-import ShowReservations from "../reservations/ShowReservations";
-import ShowTables from "../tables/ShowTables";
+import ReservationsList from "../reservations/ReservationsList";
+import TablesList from "../tables/TablesList";
 import useQuery from "../utils/useQuery";
 
 /**
@@ -84,12 +84,12 @@ function Dashboard({ date }) {
         </button>
       </div>
       <br />
-      <ShowReservations reservations={reservations} />
+      <ReservationsList reservations={reservations} />
       <hr/>
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Tables</h4>
       </div>
-      <ShowTables tables={tables} />
+      <TablesList tables={tables} />
     </main>
   );
 }

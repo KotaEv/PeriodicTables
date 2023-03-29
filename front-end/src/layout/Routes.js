@@ -7,7 +7,7 @@ import { today } from "../utils/date-time";
 import CreateReservation from "../reservations/CreateReservation";
 import CreateTable from "../tables/CreateTable";
 import SeatReservation from "../reservations/SeatReservation";
-import SearchReservations from "../reservations/SearchReservations";
+import SearchByPhoneNumber from "../Search/SearchByPhoneNumber";
 import EditReservation from "../reservations/EditReservation";
 
 /**
@@ -42,7 +42,7 @@ function Routes() {
         <CreateTable />
       </Route>
       <Route exact={true} path="/search">
-        <SearchReservations />
+        <SearchByPhoneNumber />
       </Route>
       <Route>
         <NotFound />
