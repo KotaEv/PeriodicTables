@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
 import {listReservations} from "../utils/api"
-import ShowReservations from "./ShowReservations";
+import ReservationsList from "../reservations/ReservationsList";
 
 function SearchByPhoneNumber() {
     const [formData, setFormData] = useState({mobile_number: ""})
@@ -60,7 +60,7 @@ function SearchByPhoneNumber() {
                  (
                     <section>
                         <h3>Search Results</h3>
-                        <ShowReservations reservations={reservations}/>
+                        <ReservationsList reservations={reservations}/>
                     </section>
                  )
                   : "No reservations found"}
