@@ -63,25 +63,38 @@ The API is built using RESTful API principles. This API allows for creation, rea
 Reservations and tables are managed through the dashboard screen. By default, the dashboard will list reservations for the current day (today). Using the ‘previous’ and ‘next’ buttons, the user can navigate through reservations by date.
 Tables and their availability are displayed below the current day’s reservations.
 
+![dashboard](/images/dashboard.png?raw=true)
+
 ### Create a Reservation
 Users can create a new reservation by selecting the ‘New Reservation’ button in the sidebar menu.
 All of the form fields are required, and an error banner will appear if the user enters incorrect data.
 
+![create](/images/createReservation.png?raw=true)
+
 ### Edit a Reservation
 Users may edit an existing reservation by selecting the ‘Edit’ button on the reservation listing. All fields can be edited, but the same restrictions apply as when creating a reservation.
+
+![edit](/images/editReservation.png?raw=true)
 
 ### Seat a Reservation
 Reservations can be seated at a table by selecting the ‘Seat’ button on a reservation display. Tables with capacities smaller than the reservation’s party size cannot be selected. Selecting ‘Seat’ and confirming set the reservation status to ‘seated’ and the table status to ‘occupied’.
 
+![seat](/images/seatReservation.png?raw=true)
+
 ### Search Reservations
 Users are able to search for existing reservations by the phone number associated with the reservation. This feature can be found by selecting the ‘Search’ button in the sidebar.
+
+![search](/images/searchResults.png?raw=true)
 
 ### Add Tables
 Users are able to add additional tables based on the restaurants needs by clicking the ‘New Table’ button on the sidebar. All of the fields are required.
 
+![createTable](/images/newTable.png?raw=true)
+
 ### Finish a Reservation
 Once a reservation has finished at a table, the user can select the ‘Finish’ button. This will set the status of the reservation as ‘finished’ and the table will return to the ‘free’ status and a new reservation can be placed at the selected table.
 
+![finish](/images/finish.png?raw=true)
 
 ## Installation
 1.	Fork and clone this repository.
