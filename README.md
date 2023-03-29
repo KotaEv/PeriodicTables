@@ -43,7 +43,7 @@ This repository is setup as a monorepo, meaning that the frontend and backend pr
 ## API
 The API is built using RESTful API principles. This API allows for creation, reading, and updating reservations. The user can also create and read tables, and update the status of the table from occupied to free. There is currently not capability for the user to delete reservations or tables at this time.
 
-###Endpoint Description
+### Endpoint Description:
 - GET /reservations returns all reservations
 - POST /reservations creates and returns a new reservation
 - GET /reservations?date='YYYY-MM-DD' returns reservations by date (sorted asc)
