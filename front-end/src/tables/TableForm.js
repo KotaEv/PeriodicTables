@@ -1,56 +1,41 @@
 import React from "react";
-import { useHistory } from "react-router";
 
-export default function TableForm({ table, changeHandler, submitHandler }) {
-  const history = useHistory();
-
-  return (
-    <div>
-      <form onSubmit={submitHandler}>
-        <div className="form-group row">
-          <label className="col-sm-3 col-form-label">Table Name</label>
-          <div className="col-sm-8">
-            <input
-              type="text"
-              name="table_name"
-              className="form-control"
-              id="table_name"
-              placeholder="Table Name"
-              onChange={changeHandler}
-              value={`${table.table_name}`}
-              required={true}
-            />
-          </div>
-        </div>
-        <div className="form-group row">
-          <label className="col-sm-3 col-form-label">Capacity</label>
-          <div className="col-sm-8">
-            <input
-              type="number"
-              name="capacity"
-              className="form-control"
-              id="capacity"
-              placeholder="Capacity"
-              onChange={changeHandler}
-              value={`${table.capacity}`}
-              min="1"
-              required={true}
-            />
-            <br />
-          </div>
-        </div>
-        <div className="text-center">
-          <button className="btn btn-dark mr-3" type="submit">
-            Submit
-          </button>
-          <button
-            className="btn btn-outline-dark"
-            onClick={() => history.goBack()}
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+function TableForm({submitHandle, changeHandle, form, cancelLink}){
+    return (
+        <form onSubmit={submitHandle}>
+            <div>
+                <label htmlFor="table_name" class="form-label">Table Name</label>
+                <br />
+                <input
+                    id="table_name"
+                    class="form-control"
+                    type="text"
+                    placeholder="Table Name"
+                    name="table_name"
+                    onChange={changeHandle}
+                    value={form.table_name}
+                    required
+                    />
+            </div>
+            <div>
+                <label htmlFor="capacity" class="form-label">Table Capacity</label>
+                <br />
+                <input
+                    id="capacity"
+                    class="form-control"
+                    type="number"
+                    min={1}
+                    placeholder={1}
+                    name="capacity"
+                    onChange={changeHandle}
+                    value={form.capacity}
+                    required
+                    />
+            </div>
+            <button onClick={cancelLink} className="btn btn-secondary">Cancel</button>
+            <button type="submit" className="btn btn-primary m-3">Submit</button>
+        </form>
+    )
 }
+
+export default TableForm

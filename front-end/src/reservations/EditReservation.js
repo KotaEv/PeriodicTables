@@ -1,97 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router";
+import React, { useState, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom"
+import ReservationForm from "./ReservationForm"
 import ErrorAlert from "../layout/ErrorAlert";
 import { readReservation, updateReservation } from "../utils/api";
-import ReservationForm from "./ReservationForm";
 
-export default function EditReservation() {
-  const history = useHistory();
-  const { reservation_id } = useParams();
-  let initialFormData = {
-    first_name: "",
-    last_name: "",
-    mobile_number: "",
-    reservation_date: "",
-    reservation_time: "",
-    people: "",
-  };
+function EditReservation() {
+    const { reservation_id } = useParams()
+    const [reservation, setReservation] = useState({})
 
-  const [formData, setFormData] = useState(initialFormData);
-  const [errorArray, setErrorArray] = useState([]);
+    const [err, setErr] = useState(false)
+    const history = useHistory()
 
-  // Sends a get request to API using readReservation and reservation_id as an argument.
-  // stores the data returned from API in initialFormData
-  // Sets formData to initialFormData
-  useEffect(() => {
-    const abortController = new AbortController();
-    const loadReservation = async () => {
-      try {
-        let recallReservation = await readReservation(
-          reservation_id,
-          abortController.signal
-        );
-        recallReservation.reservation_date =
-          recallReservation.reservation_date.split("T")[0];
+    useEffect(()=>{
+        async function getReservation() {
+            const response = await readReservation(reservation_id)
+            setReservation(response)
+        } getReservation()
+    }, [reservation_id])
+    
+    const changeHandle = ({target})=> {
+        setReservation({...reservation, [target.name]: target.value})
+    }
 
-        initialFormData = {
-          first_name: recallReservation.first_name,
-          last_name: recallReservation.last_name,
-          mobile_number: recallReservation.mobile_number,
-          reservation_date: recallReservation.reservation_date,
-          reservation_time: recallReservation.reservation_time,
-          people: recallReservation.people,
-        };
-        setFormData(initialFormData);
-      } catch (error) {
-        setErrorArray([error.message]);
-      }
-    };
+    const submitHandle = async (event)=> {
+        event.preventDefault()
+        setErr(false)
+        const abortController = new AbortController()
+        reservation.people = Number(reservation.people)
+        try {
+            const response = await updateReservation(reservation, abortController.signal)
+            history.push(`/dashboard?date=${response.reservation_date}`)
+        }
+        catch(error) {
+            if(error.name !== "AbortError") {
+                setErr(error)
+            }
+        }
+        return () => {
+            abortController.abort()
+          }
+    }
 
-    loadReservation();
-    return () => abortController.abort();
-  }, [reservation_id]);
+    const cancelLink= ()=> history.goBack()
 
-  // Sends a put request to API with the new reservation information
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const abortController = new AbortController();
-    formData.people = Number(formData.people);
-    const putReservation = async () => {
-      try {
-        await updateReservation(
-          formData,
-          reservation_id,
-          abortController.signal
-        );
-        history.push(`/dashboard?date=${formData.reservation_date}`);
-      } catch (error) {
-        setErrorArray([error.message]);
-      }
-    };
 
-    putReservation();
-  };
-
-  const handleChange = ({ target }) => {
-    setFormData({
-      ...formData,
-      [target.name]: target.value,
-    });
-  };
-
-  return (
-    <div>
-      <h1>Edit Reservation</h1>
-      <div>
-        <ErrorAlert error={errorArray} />
-      </div>
-      <div>
-        <ReservationForm
-          handleChange={handleChange}
-          reservation={formData}
-          handleSubmit={handleSubmit}
-        />
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Edit Reservation</h1>
+            <ErrorAlert error = {err}/>
+            <ReservationForm submitHandle={submitHandle} changeHandle={changeHandle} form={reservation} cancelLink={cancelLink} />
+        </div>
+    )
 }
+
+export default EditReservation

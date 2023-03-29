@@ -1,57 +1,49 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
-import ErrorAlert from "../layout/ErrorAlert";
-import { postTables } from "../utils/api";
+import { useHistory } from "react-router-dom"
 import TableForm from "./TableForm";
+import { createTable } from "../utils/api"
+import ErrorAlert from "../layout/ErrorAlert";
 
-function CreateTable() {
-  const initialFormState = {
-    table_name: "",
-    capacity: 0,
-  };
-
-  const [table, setTable] = useState({ ...initialFormState });
-  const [tableError, setTableError] = useState([]);
-
-  const history = useHistory();
-
-  const changeHandler = ({ target }) => {
-    setTable({ ...table, [target.name]: target.value });
-  };
-
-  //
-  async function submitHandler(event) {
-    const abortController = new AbortController();
-    event.preventDefault();
-    let newTable = table;
-    newTable.capacity = Number(newTable.capacity);
-
-    try {
-      await postTables(newTable, abortController.signal);
-      setTable(initialFormState);
-      history.push(`/dashboard`);
-    } catch (error) {
-      setTableError([error.message]);
+function CreateTable(){
+    const history = useHistory()
+    const [formData, setFormData] = useState({
+        table_name: "",
+        capacity: ""
+    })
+    const [err, setErr] = useState(false)
+    
+    const changeHandle = ({target})=> {
+        setFormData({...formData, [target.name]: target.value})
     }
 
-    return () => {
-      abortController.abort();
-    };
-  }
+    const submitHandle = async (event)=> {
+        event.preventDefault()
+        setErr(false)
+        const abortController = new AbortController()
+        formData.capacity = Number(formData.capacity)
+        try {
+            await createTable(formData, abortController.signal)
+            history.push(`/dashboard`)
+        }
+        catch(error) {
+            if(error.name !== "AbortError") {
+                setErr(error)
+            }
+        }
+        return () => {
+            abortController.abort()
+          }
+    }
 
-  return (
-    <section>
-      <div>
-        <h2>Tables</h2>
-        <ErrorAlert error={tableError} />
-        <TableForm
-          table={table}
-          submitHandler={submitHandler}
-          changeHandler={changeHandler}
-        />
-      </div>
-    </section>
-  );
+    const cancelLink= ()=> history.goBack()
+
+    return (
+        <div>
+            <h1>New Table</h1>
+            <ErrorAlert error = {err}/>
+            <TableForm submitHandle={submitHandle} changeHandle={changeHandle} form={formData} cancelLink={cancelLink} />
+        </div>
+    )
 }
 
-export default CreateTable;
+export default CreateTable

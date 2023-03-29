@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import NotFound from "./NotFound";
@@ -6,8 +7,8 @@ import { today } from "../utils/date-time";
 import CreateReservation from "../reservations/CreateReservation";
 import CreateTable from "../tables/CreateTable";
 import SeatReservation from "../reservations/SeatReservation";
+import SearchReservations from "../reservations/SearchReservations";
 import EditReservation from "../reservations/EditReservation";
-import SearchByPhoneNumber from "../Search/SearchByPhoneNumber";
 
 /**
  * Defines all the routes for the application.
@@ -28,20 +29,20 @@ function Routes() {
       <Route path="/dashboard">
         <Dashboard date={today()} />
       </Route>
-      <Route exact={true} path={"/reservations/new"}>
+      <Route exact={true} path="/reservations/new">
         <CreateReservation />
       </Route>
-      <Route exact={true} path={"/tables/new"}>
-        <CreateTable />
-      </Route>
-      <Route exact={true} path={`/reservations/:reservation_id/seat`}>
+      <Route exact={true} path="/reservations/:reservation_id/seat">
         <SeatReservation />
-      </Route>
-      <Route exact={true} path={"/search"}>
-        <SearchByPhoneNumber />
       </Route>
       <Route exact={true} path="/reservations/:reservation_id/edit">
         <EditReservation />
+      </Route>
+      <Route exact={true} path="/tables/new">
+        <CreateTable />
+      </Route>
+      <Route exact={true} path="/search">
+        <SearchReservations />
       </Route>
       <Route>
         <NotFound />

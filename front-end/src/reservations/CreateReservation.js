@@ -1,68 +1,53 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
-import ErrorAlert from "../layout/ErrorAlert";
-import { postReservations } from "../utils/api";
-import { today } from "../utils/date-time";
+import { useHistory } from "react-router-dom"
 import ReservationForm from "./ReservationForm";
+import { createReservation } from "../utils/api"
+import ErrorAlert from "../layout/ErrorAlert";
 
-function CreateReservation() {
-  const initialFormState = {
-    first_name: "",
-    last_name: "",
-    mobile_number: "",
-    reservation_date: today(),
-    reservation_time: "",
-    people: "",
-  };
-
-  const [formData, setFormData] = useState(initialFormState);
-  const [reservationError, setReservationError] = useState([]);
-
-  const history = useHistory();
-
-  const handleChange = ({ target }) => {
-    setFormData({
-      ...formData,
-      [target.name]: target.value,
-    });
-  };
-
-  // Initialize a variable with reservation object
-  // restore reservations data to its initial state
-  // change the value of  rsvp.people to a number
-  // Send a post request with the new reservation using postReservation
-  async function handleSubmit(event) {
-    const abortController = new AbortController();
-    event.preventDefault();
-
-    try {
-      let rsvp = formData;
-      rsvp.people = Number(rsvp.people);
-      await postReservations(rsvp, abortController.signal);
-      setFormData(initialFormState);
-      history.push(`/dashboard?date=${rsvp.reservation_date}`);
-    } catch (error) {
-      setReservationError([...reservationError, error.message]);
+function CreateReservation(){
+    const history = useHistory()
+    const [formData, setFormData] = useState({
+        first_name: "",
+        last_name: "",
+        mobile_number: "",
+        reservation_date: "",
+        reservation_time: "",
+        people: ""
+    })
+    const [err, setErr] = useState(false)
+    
+    const changeHandle = ({target})=> {
+        setFormData({...formData, [target.name]: target.value})
     }
 
-    return () => {
-      abortController.abort();
-    };
-  }
+    const submitHandle = async (event)=> {
+        event.preventDefault()
+        setErr(false)
+        const abortController = new AbortController()
+        formData.people = Number(formData.people)
+        try {
+            const response = await createReservation(formData, abortController.signal)
+            history.push(`/dashboard?date=${response.reservation_date}`)
+        }
+        catch(error) {
+            if(error.name !== "AbortError") {
+                setErr(error)
+            }
+        }
+        return () => {
+            abortController.abort()
+          }
+    }
 
-  return (
-    <section>
-      <div>
-        <h2>Reservation</h2>
-        <ErrorAlert error={reservationError} />
-        <ReservationForm
-          reservation={formData}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-        />
-      </div>
-    </section>
-  );
+    const cancelLink= ()=> history.push(`/dashboard`)
+
+    return (
+        <div>
+            <h1>New Reservation</h1>
+            <ErrorAlert error = {err}/>
+            <ReservationForm submitHandle={submitHandle} changeHandle={changeHandle} form={formData} cancelLink={cancelLink} />
+        </div>
+    )
 }
 
-export default CreateReservation;
+export default CreateReservation

@@ -1,99 +1,72 @@
 import React, { useState } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
-import ReservationsList from "../reservations/ReservationsList";
-import { useHistory } from "react-router";
-import { searchReservationByPhone } from "../utils/api";
+import {listReservations} from "../utils/api"
+import ShowReservations from "./ShowReservations";
 
-export default function SearchByPhoneNumber() {
-  const initialFormData = {
-    mobile_number: "",
-  };
+function SearchByPhoneNumber() {
+    const [formData, setFormData] = useState({mobile_number: ""})
+    const [err, setErr] = useState(false)
+    const [reservations, setReservations] = useState([])
 
-  const history = useHistory();
-
-  const [formData, setFormData] = useState(initialFormData);
-  const [displaySearchResults, setDisplaySearchResults] = useState([]);
-  const [searchError, setSearchError] = useState([]);
-
-  const handleChange = ({ target }) => {
-    setFormData({
-      ...formData,
-      [target.name]: target.value,
-    });
-  };
-
-  // Sends a get request with the mobile number as a query.
-  // The data returned from the get request is stored in state.
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const abortController = new AbortController();
-    const returnedSearchReservations = await searchReservationByPhone(
-      formData.mobile_number,
-      abortController.signal
-    );
-    setDisplaySearchResults(returnedSearchReservations);
-    try {
-    } catch (error) {
-      setSearchError([error.message]);
+    const changeHandle = ({target})=> {
+        setFormData({...formData, [target.name]: target.value})
     }
-  };
 
-  const handleCancel = () => {
-    history.push("/");
-  };
+    const submitHandle = async (event)=> {
+        event.preventDefault()
+        setErr(false)
+        const abortController = new AbortController()
+        try {
+            const results = await listReservations(formData, abortController.signal)
+            setReservations(results)
+            setFormData({mobile_number: ""})
+        }
+        catch(error) {
+            if(error.name !== "AbortError") {
+                setErr(error)
+            }
+        }
+        return () => {
+            abortController.abort()
+          }
+    }
 
-  return (
-    <div>
-      <div>
-        <h1>Search By Phone</h1>
-      </div>
-      <ErrorAlert error={searchError} />
-      <div>
-        <form onClick={handleSubmit}>
-          <div className="form-group row">
-            <label htmlFor="mobile_number" className="col-form-label mr-3">
-              Mobile Number:
-            </label>
-            <input
-              name="mobile_number"
-              id="mobile_number"
-              type="text"
-              placeholder="Enter a customer's phone number"
-              onChange={handleChange}
-              value={formData.mobile_number}
-              required
-              className="mr-3"
-            />
-            <div className="mr-3">
-              <button type="submit" className="btn btn-dark mr-2">
-                Find
-              </button>
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="btn btn-outline-dark"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-          {displaySearchResults.length === 0 ? (
-            <div className="mt-5">
-              <h3>No reservations found</h3>
-            </div>
-          ) : (
-            <div className="container">
-              <div className="row">
-                {displaySearchResults.map((rsvp) => (
-                  <div key={rsvp.reservation_id} className="mt-5 mr-3">
-                    <ReservationsList reservation={rsvp} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </form>
-      </div>
-    </div>
-  );
+
+    return (
+        <main>
+            <h1>Search Reservations</h1>
+            <ErrorAlert error = {err}/>
+            <section>
+                <form onSubmit={submitHandle}>
+                    <div>
+                        <label htmlFor="mobile_number" class="form-label">Mobile Number:</label>
+                        <br />
+                        <input
+                            id="mobile_number"
+                            class="form-control"
+                            type="text"
+                            placeholder="Enter a customer's phone number"
+                            name="mobile_number"
+                            onChange={changeHandle}
+                            value={formData.mobile_number}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-primary m-3">Find</button>
+                </form>
+            </section>
+            <hr/>
+                {reservations.length > 0 ?
+                 (
+                    <section>
+                        <h3>Search Results</h3>
+                        <ShowReservations reservations={reservations}/>
+                    </section>
+                 )
+                  : "No reservations found"}
+            
+        </main>
+    )
 }
+
+export default SearchByPhoneNumber
