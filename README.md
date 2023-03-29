@@ -5,7 +5,7 @@ The Periodic Tables full stack application is a restaurant reservation system ut
 NOTE: This project was completed as the final capstone for the Thinkful Software Engineering Bootcamp.
 
 ## Application
-
+[Periodic Tables](https://periodic-tables-front.vercel.app/dashboard)
 
 ## Table of Contents
 
