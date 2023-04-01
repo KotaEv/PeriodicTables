@@ -3,6 +3,11 @@ import moment from "moment";
 
 function ReservationForm({submitHandle, changeHandle, form, cancelLink}){
     const date = moment(form.reservation_date).format("yyyy-MM-DD")
+    const maxLengthCheck = (object) => {
+        if (object.target.value.length > object.target.maxLength) {
+         object.target.value = object.target.value.slice(0, object.target.maxLength)
+          }
+        }
 
     return (
         <form onSubmit={submitHandle}>
@@ -43,6 +48,7 @@ function ReservationForm({submitHandle, changeHandle, form, cancelLink}){
                     type="tel"
                     placeholder="(---) --- ----"
                     name="mobile_number"
+                    onInput{maxLengthCheck}
                     onChange={changeHandle}
                     value={form.mobile_number}
                     required
