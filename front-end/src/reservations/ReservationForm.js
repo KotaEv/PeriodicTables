@@ -45,7 +45,8 @@ function ReservationForm({submitHandle, changeHandle, form, cancelLink}){
                 <input
                     id="mobile_number"
                     className="form-control"
-                    type="tel"
+                    type="number"
+                    maxLength = '9'
                     placeholder="(---) --- ----"
                     name="mobile_number"
                     onInput={maxLengthCheck}
