@@ -48,7 +48,7 @@ function ReservationForm({submitHandle, changeHandle, form, cancelLink}){
                     type="tel"
                     placeholder="(---) --- ----"
                     name="mobile_number"
-                    onInput{maxLengthCheck}
+                    onInput={maxLengthCheck}
                     onChange={changeHandle}
                     value={form.mobile_number}
                     required
