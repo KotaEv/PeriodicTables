@@ -62,6 +62,19 @@ const properties = [
 
 const hasRequiredProperties = hasProperties(properties)
 
+// function to validate mobile-number entry is a number
+function validPhoneNumberEntry (req, res, next){
+  const number = req.body.data.mobile_number
+  const validNumber = /^\(?([0-9]{3})\)?[-]?([0-9]{3})[-]?([0-9]{4})$/.test(number);
+  if(!validNumber) {
+    next({
+      status: 400,
+      message: 'Mobile Number must follow the format xxx-xxx-xxx',
+    })
+  }
+  next()
+}
+
 // function to validate the format of the date
 function validDate(req, res, next){
   const date = req.body.data.reservation_date
